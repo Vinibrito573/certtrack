@@ -1,0 +1,68 @@
+<!-- Dashboard page for CertTrack Application: in this page the admins will be able to view KPIs reports -->
+<!-- Vinicius Brito-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | CertTrack</title>
+
+  <!-- Bootstrap references for CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a3c2e;">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="/dashboard">
+        <img src="/logo.png" alt="CertTrack" style="width: 120px;">
+      </a>
+      <div class="ms-auto">
+        <span class="text-white me-3"> 🖊️ <%= user.name %></span>
+        <a href="/logout" class="btn btn-outline-light btn-sm">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+
+    <!-- Page title -->
+    <h4 class="mb-4" style="color: #1a3c2e;">Compliance Dashboard</h4>
+
+    <!-- KPI Cards -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="card border-success shadow-sm">
+          <div class="card-body text-center">
+            <h2 class="text-success"><%= stats.valid %></h2>
+            <p class="mb-0 text-muted">Valid Certificates</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-warning shadow-sm">
+          <div class="card-body text-center">
+            <h2 class="text-warning"><%= stats.expiring %></h2>
+            <p class="mb-0 text-muted">Expiring Soon (30 days)</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-danger shadow-sm">
+          <div class="card-body text-center">
+            <h2 class="text-danger"><%= stats.expired %></h2>
+            <p class="mb-0 text-muted">Expired</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
