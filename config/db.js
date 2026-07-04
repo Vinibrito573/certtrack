@@ -1,4 +1,4 @@
-// Connecting Database for CertTrack ApplicationDatabase connection configuration for CertTrack
+// Connecting Database for CertTrack Application
 // Vinicius Brito
 // Using MySQL2 with connection pool for better performance
 

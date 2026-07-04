@@ -1,0 +1,92 @@
+<!-- Employee List Page for displays all registered construction workers with options to edit or delete -->
+<!-- Vinicius Brito -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | CertTrack</title>
+  <!-- Bootstrap references for CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-light" style="font-family: 'Inter', sans-serif;">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a3c2e;">
+    <div class="container">
+      <a class="navbar-brand" href="/dashboard">
+        <img src="/logo.png" alt="CertTrack" style="width: 110px;">
+      </a>
+      <div class="ms-auto d-flex align-items-center gap-3">
+        <a href="/dashboard" class="text-white text-decoration-none">Dashboard</a>
+        <a href="/employees" class="text-white text-decoration-none fw-bold">Employees</a>
+        <a href="/projects" class="text-white text-decoration-none">Projects</a>
+        <span class="text-white">🖊️ <%= user.name %></span>
+        <a href="/logout" class="btn btn-outline-light btn-sm">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+
+    <!-- Page header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h4 class="fw-bold mb-0" style="color: #1a3c2e;">Construction Workers</h4>
+      <a href="/employees/create" class="btn text-white" style="background-color: #1a3c2e;">+ Add Worker</a>
+    </div>
+
+    <!-- Workers table -->
+    <div class="card shadow-sm">
+      <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+          <thead style="background-color: #1a3c2e; color: white;">
+            <tr>
+              <th class="px-4 py-3">Name</th>
+              <th class="py-3">Worker ID</th>
+              <th class="py-3">Email</th>
+              <th class="py-3">Company</th>
+              <th class="py-3 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+    <!-- If no workers registered yet, show empty message -->
+            <% if (employees.length === 0) { %>
+              <tr>
+                <td colspan="5" class="text-center text-muted py-4">No workers registered yet. Click "Add Worker" to get started.</td>
+              </tr>
+            <% } else { %>
+        <!-- Loop through all workers and display each row -->
+              <% employees.forEach(emp => { %>
+                <tr>
+                  <td class="px-4 py-3 fw-semibold"><%= emp.name %></td>
+                  <td class="py-3"><span class="badge" style="background-color: #1a3c2e;"><%= emp.employee_ref %></span></td>
+                <!-- Showing dash if email is not provided -->
+                  <td class="py-3"><%= emp.email || '—' %></td>
+                <!-- Showing dash if company is not provided -->
+                  <td class="py-3"><%= emp.company || '—' %></td>
+                  <td class="py-3 text-center">
+                    <!-- Edit button -->
+                    <a href="/employees/edit/<%= emp.id %>" class="btn btn-sm btn-outline-secondary me-1">Edit</a>
+                    <!-- Delete button -->
+                    <form method="POST" action="/employees/delete/<%= emp.id %>" style="display:inline;" onsubmit="return confirm('Are you sure you want to remove <%= emp.name %>?')">
+                      <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

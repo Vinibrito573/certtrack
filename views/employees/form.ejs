@@ -1,0 +1,96 @@
+<!-- This form is used for both creating and editing construction workers -->
+<!-- Vinicius Brito -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | CertTrack</title>
+  <!-- Bootstrap references for CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-light" style="font-family: 'Inter', sans-serif;">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a3c2e;">
+    <div class="container">
+      <a class="navbar-brand" href="/dashboard">
+        <img src="/logo.png" alt="CertTrack" style="width: 110px;">
+      </a>
+      <div class="ms-auto d-flex align-items-center gap-3">
+        <a href="/dashboard" class="text-white text-decoration-none">Dashboard</a>
+        <a href="/employees" class="text-white text-decoration-none fw-bold">Employees</a>
+        <a href="/projects" class="text-white text-decoration-none">Projects</a>
+            <span class="text-white">🖊️ <%= user.name %></span>
+        <a href="/logout" class="btn btn-outline-light btn-sm">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4" style="max-width: 600px;">
+    <!-- Page header with back button -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h4 class="fw-bold mb-0" style="color: #1a3c2e;"><%= title %></h4>
+      <a href="/employees" class="btn btn-outline-secondary btn-sm">← Back</a>
+    </div>
+
+    <!-- Form card -->
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+
+        <!-- If employee exists, it means we are editing. If not, we are creating -->
+        <form method="POST" action="/employees/<%= employee ? 'edit/' + employee.id : 'create' %>">
+
+          <!-- Worker full name, as a required field -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
+            <input type="text" name="name" class="form-control"
+              value="<%= employee ? employee.name : '' %>" required>
+          </div>
+
+          <!-- Worker ID used for login, it must be unique -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Worker ID <span class="text-danger">*</span></label>
+            <input type="text" name="employee_ref" class="form-control"
+              placeholder="e.g. SP-00123"
+              value="<%= employee ? employee.employee_ref : '' %>" required>
+            <!-- Helper text explaining the worker ID -->
+            <div class="form-text">This ID must be unique. Workers will use it to log in.</div>
+          </div>
+
+          <!-- Email, as optional field -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Email</label>
+            <input type="email" name="email" class="form-control"
+              value="<%= employee ? employee.email : '' %>">
+          </div>
+
+          <!-- Company or subcontractor name, as an optional field -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Company / Subcontractor</label>
+            <input type="text" name="company" class="form-control"
+              value="<%= employee ? employee.company : '' %>">
+          </div>
+
+          <!-- Submit and cancel buttons -->
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <a href="/employees" class="btn btn-outline-secondary">Cancel</a>
+            <!-- Button text changes depending on if we are creating or editing -->
+            <button type="submit" class="btn text-white" style="background-color: #1a3c2e;">
+              <%= employee ? 'Save Changes' : 'Add Worker' %>
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

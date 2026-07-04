@@ -15,13 +15,16 @@
 <body class="bg-light">
 
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a3c2e;">
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a3c2e;">
     <div class="container">
-      <a class="navbar-brand fw-bold" href="/dashboard">
-        <img src="/logo.png" alt="CertTrack" style="width: 120px;">
+      <a class="navbar-brand" href="/dashboard">
+        <img src="/logo.png" alt="CertTrack" style="width: 110px;">
       </a>
-      <div class="ms-auto">
-        <span class="text-white me-3"> 🖊️ <%= user.name %></span>
+      <div class="ms-auto d-flex align-items-center gap-3">
+        <a href="/dashboard" class="text-white text-decoration-none fw-bold">Dashboard</a>
+        <a href="/employees" class="text-white text-decoration-none">Employees</a>
+        <a href="/projects" class="text-white text-decoration-none">Projects</a>
+        <span class="text-white">🖊️ <%= user.name %></span>
         <a href="/logout" class="btn btn-outline-light btn-sm">Logout</a>
       </div>
     </div>
