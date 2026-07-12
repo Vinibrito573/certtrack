@@ -1,4 +1,4 @@
-<!-- Employee List Page is responsible for showing all registered workers with options to edit or delete -->
+<!-- This page is for displaying all registered construction sites/projects with options to edit or delete -->
 <!-- Vinicius Brito -->
 
 <!DOCTYPE html>
@@ -7,7 +7,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title %> | CertTrack</title>
-  
   <!-- Bootstrap references for CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Google Fonts -->
@@ -16,7 +15,7 @@
 
 <body class="bg-light" style="font-family: 'Inter', sans-serif;">
 
-  <!-- Navbar -->
+  <!-- Top navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a3c2e;">
     <div class="container">
       <a class="navbar-brand" href="/dashboard">
@@ -24,8 +23,8 @@
       </a>
       <div class="ms-auto d-flex align-items-center gap-3">
         <a href="/dashboard" class="text-white text-decoration-none">Dashboard</a>
-        <a href="/employees" class="text-white text-decoration-none fw-bold">Employees</a>
-        <a href="/projects" class="text-white text-decoration-none">Projects</a>
+        <a href="/employees" class="text-white text-decoration-none">Employees</a>
+        <a href="/projects" class="text-white text-decoration-none fw-bold">Projects</a>
         <span class="text-white">🖊️ <%= user.name %></span>
         <a href="/logout" class="btn btn-outline-light btn-sm">Logout</a>
       </div>
@@ -36,55 +35,56 @@
 
     <!-- Page header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <h4 class="fw-bold mb-0" style="color: #1a3c2e;">Construction Workers</h4>
-      <a href="/employees/create" class="btn text-white" style="background-color: #1a3c2e;">+ Add Worker</a>
+      <h4 class="fw-bold mb-0" style="color: #1a3c2e;">Construction Projects</h4>
+      <a href="/projects/create" class="btn text-white" style="background-color: #1a3c2e;">+ Add Project</a>
     </div>
 
-    <!-- Workers table -->
+    <!-- Tables containing projects/site details -->
     <div class="card shadow-sm">
       <div class="card-body p-0">
         <table class="table table-hover mb-0">
           <thead style="background-color: #1a3c2e; color: white;">
             <tr>
-              <th class="px-4 py-3">Name</th>
-              <th class="py-3">Worker ID</th>
-              <th class="py-3">Email</th>
-              <th class="py-3">Company</th>
+              <th class="px-4 py-3">Project Name</th>
+              <th class="py-3">Location</th>
+              <th class="py-3">Status</th>
               <th class="py-3 text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
-    <!-- If no workers registered yet, show empty message -->
-            <% if (employees.length === 0) { %>
+            <!-- If there is no projects registered yet, then show empty message -->
+            <% if (projects.length === 0) { %>
               <tr>
-                <td colspan="5" class="text-center text-muted py-4">No workers registered yet. Click "Add Worker" to get started.</td>
+                <td colspan="4" class="text-center text-muted py-4">No projects registered yet, please click on "Add Project" to get started.</td>
               </tr>
             <% } else { %>
-        <!-- Loop through all workers and display each row -->
-              <% employees.forEach(emp => { %>
+              <!-- Loop through all projects and display each row -->
+              <% projects.forEach(proj => { %>
                 <tr>
-                  <td class="px-4 py-3 fw-semibold"><%= emp.name %></td>
-                  <td class="py-3"><span class="badge" style="background-color: #1a3c2e;"><%= emp.employee_ref %></span></td>
-                <!-- Showing dash if email is not provided -->
-                  <td class="py-3"><%= emp.email || '—' %></td>
-                <!-- Showing dash if company is not provided -->
-                  <td class="py-3"><%= emp.company || '—' %></td>
+                  <td class="px-4 py-3 fw-semibold"><%= proj.name %></td>
+                  <!-- Showing dash if location is not provided -->
+                  <td class="py-3"><%= proj.location || '—' %></td>
+                  <!-- Showing badge green for active, grey for closed -->
+                  <td class="py-3">
+                <span class="badge" style="background-color: <%= proj.status === 'active' ? '#1a3c2e' : '#6c757d' %>;">
+                <%= proj.status %>
+                </span>
+                  </td>
                   <td class="py-3 text-center">
                     <!-- Edit button -->
-                    <a href="/employees/edit/<%= emp.id %>" class="btn btn-sm btn-outline-secondary me-1">Edit</a>
+                    <a href="/projects/edit/<%= proj.id %>" class="btn btn-sm btn-outline-secondary me-1">Edit</a>
                     <!-- Delete button -->
-                    <form method="POST" action="/employees/delete/<%= emp.id %>" style="display:inline;" onsubmit="return confirm('Are you sure you want to remove <%= emp.name %>?')">
+                    <form method="POST" action="/projects/delete/<%= proj.id %>" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete <%= proj.name %>?')">
                       <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
                     </form>
                   </td>
                 </tr>
-              <% }) %>
-            <% } %>
+              <%})%>
+            <% }%>
           </tbody>
         </table>
       </div>
     </div>
-
   </div>
 
   <!-- Bootstrap JS -->
