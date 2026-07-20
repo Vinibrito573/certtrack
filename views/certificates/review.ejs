@@ -13,6 +13,53 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
+<script>
+  // Auto-filling dates from OCR extracted text
+  const ocrText = `<%= rawText.replace(/`/g, "'") %>`;
+
+  // Function to convert date string to YYYY-MM-DD format
+  function parseToInputDate(dateStr) {
+    const months = {
+      'january': '01', 'february': '02', 'march': '03', 'april': '04',
+      'may': '05', 'june': '06', 'july': '07', 'august': '08',
+      'september': '09', 'october': '10', 'november': '11', 'december': '12'
+    };
+
+    // Trying format "13 July 2026"
+    const wordMatch = dateStr.trim().match(/(\d{1,2})\s+(\w+)\s+(\d{4})/);
+    if (wordMatch) {
+      const day = wordMatch[1].padStart(2, '0');
+      const month = months[wordMatch[2].toLowerCase()];
+      const year = wordMatch[3];
+      if (month) return `${year}-${month}-${day}`;
+    }
+
+    // Trying format "13/07/2026"
+    const slashMatch = dateStr.trim().match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    if (slashMatch) {
+      const day = slashMatch[1].padStart(2, '0');
+      const month = slashMatch[2].padStart(2, '0');
+      const year = slashMatch[3];
+      return `${year}-${month}-${day}`;
+    }
+    return null;
+  }
+
+  // Matching "ISSUE DATE: 13 July 2026" even when followed by more text
+  const issueMatch = ocrText.match(/ISSUE\s*DATE[:\s]+(\d{1,2}\s+\w+\s+\d{4}|\d{1,2}\/\d{1,2}\/\d{4})/i);
+  if (issueMatch) {
+    const date = parseToInputDate(issueMatch[1]);
+    if (date) document.querySelector('input[name="issue_date"]').value = date;
+  }
+
+  // Matching "EXPIRY DATE: 13 July 2029"
+  const expiryMatch = ocrText.match(/EXPIRY\s*DATE[:\s]+(\d{1,2}\s+\w+\s+\d{4}|\d{1,2}\/\d{1,2}\/\d{4})/i);
+  if (expiryMatch) {
+    const date = parseToInputDate(expiryMatch[1]);
+    if (date) document.querySelector('input[name="expiry_date"]').value = date;
+  }
+</script>
+
 <body class="bg-light" style="font-family: 'Inter', sans-serif;">
     
     <%- include('../layouts/navbar') %>
