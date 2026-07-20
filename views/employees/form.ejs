@@ -38,16 +38,6 @@
               value="<%= employee ? employee.name : '' %>" required>
           </div>
 
-          <!-- Worker ID used for login, it must be unique -->
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Worker ID <span class="text-danger">*</span></label>
-            <input type="text" name="employee_ref" class="form-control"
-              placeholder="e.g. SP-00123"
-              value="<%= employee ? employee.employee_ref : '' %>" required>
-            <!-- Helper text explaining the worker ID -->
-            <div class="form-text">This ID must be unique. Workers will use it to log in.</div>
-          </div>
-
           <!-- Email, as optional field -->
           <div class="mb-3">
             <label class="form-label fw-semibold">Email</label>

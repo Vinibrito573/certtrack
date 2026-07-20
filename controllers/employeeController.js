@@ -19,9 +19,10 @@ const showCreate = (req, res) =>{
 };
 
 // Saving a new employee to the database
-const create = async (req,res) =>{
-  const { name, employee_ref, email, company } = req.body;
-  try {await employeeModel.create(name, employee_ref, email, company);
+const create = async (req, res) => {
+  const { name, email, company } = req.body;
+  try {
+    await employeeModel.create(name, email, company);
     res.redirect('/employees');
   } catch (err) {
     console.error('Error creating employee:', err);

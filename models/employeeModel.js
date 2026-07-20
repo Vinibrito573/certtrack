@@ -14,9 +14,18 @@ const getById = async (id) => {
   return rows[0];
 };
 
-// Adding a new employee
-const create = async (name, employee_ref, email, company) => {
-  const [result] = await db.query('INSERT INTO employees (name, employee_ref, email, company) VALUES (?, ?, ?, ?)',
+// Creating a new employee with auto-generated Worker ID (CT001, CT002, etc.), as we will have subcontractors and probably they wont have HR ID.
+
+const create = async (name, email, company) => {
+  // Counting existing employees to generate the next unique ID
+  const [rows] = await db.query('SELECT COUNT(*) AS total FROM employees');
+  const total = rows[0].total + 1;
+
+  // Generating unique Worker ID // CT001, CT002, CT003...
+  const employee_ref = 'CT' + String(total).padStart(3, '0');
+
+  const [result] = await db.query(
+    'INSERT INTO employees (name, employee_ref, email, company) VALUES (?, ?, ?, ?)',
     [name, employee_ref, email, company]
   );
   return result.insertId;
