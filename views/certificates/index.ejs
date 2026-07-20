@@ -1,0 +1,87 @@
+<!-- This page will display all certificates from all construction workers, and it will be ordered by expiry date so the most urgent ones appear first -->
+<!-- Vinicius Brito -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | CertTrack</title>
+  <!-- Bootstrap references for CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-light" style="font-family: 'Inter', sans-serif;">
+
+<%- include('../layouts/navbar') %>
+
+  <div class="container mt-4">
+
+    <!-- Page header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h4 class="fw-bold mb-0" style="color: #1a3c2e;">Training Certificates</h4>
+      <a href="/certificates/upload" class="btn text-white" style="background-color: #1a3c2e;">+ Upload Certificate</a>
+    </div>
+
+    <!-- Certificates table -->
+    <div class="card shadow-sm">
+      <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+          <thead style="background-color: #1a3c2e; color: white;">
+            <tr>
+              <th class="px-4 py-3">Full Name</th>
+              <th class="py-3">Worker ID</th>
+              <th class="py-3">Training Type</th>
+              <th class="py-3">Issue Date</th>
+              <th class="py-3">Expiry Date</th>
+              <th class="py-3 text-center">Status</th>
+              <th class="py-3 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- If no certificates registered yet, show empty message -->
+            <% if (certificates.length === 0) { %>
+              <tr>
+                <td colspan="7"class="text-center text-muted py-4">No certificates uploaded yet. Click "+ Upload Certificate" to get started.</td>
+              </tr>
+            <% } else { %>
+              <!-- Looping through all certificates and display each row -->
+              <% certificates.forEach(cert => { %>
+                <tr>
+                  <td class="px-4 py-3 fw-semibold"><%= cert.employee_name %></td>
+                  <td class="py-3"><span class="badge" style="background-color: #1a3c2e;"><%= cert.employee_ref %></span></td>
+                  <td class="py-3"><%= cert.training_name %></td>
+                  <td class="py-3"><%= new Date(cert.issue_date).toLocaleDateString('en-IE') %></td>
+                  <td class="py-3"><%= new Date(cert.expiry_date).toLocaleDateString('en-IE') %></td>
+                  <!-- Showing colour coded status badge -->
+                  <td class="py-3 text-center">
+                    <% if (cert.status === 'valid') { %>
+                      <span class="badge bg-success">Valid</span>
+                    <% } else if (cert.status === 'expiring_soon') { %>
+                      <span class="badge bg-warning text-dark">Expiring Soon</span>
+                    <% } else { %>
+                      <span class="badge bg-danger">Expired</span>
+                    <% } %>
+                  </td>
+                  <td class="py-3 text-center">
+                    <!-- Delete button -->
+                    <form method="POST" action="/certificates/delete/<%= cert.id %>" style="display:inline;"
+                      onsubmit="return confirm('Are you sure you want to delete this certificate for <%= cert.employee_name %>?')">
+                      <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

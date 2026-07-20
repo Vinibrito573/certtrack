@@ -1,0 +1,81 @@
+<!-- This page allows the admin to upload a certificate for OCR processing -->
+<!-- Vinicius Brito -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | CertTrack</title>
+  <!-- Bootstrap references for CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-light" style="font-family: 'Inter', sans-serif;">
+
+<%- include('../layouts/navbar') %>
+
+  <div class="container mt-4" style="max-width: 600px;">
+
+    <!-- Page header with back button -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h4 class="fw-bold mb-0" style="color: #1a3c2e;">Upload Certificate</h4>
+      <a href="/certificates" class="btn btn-outline-secondary btn-sm">← Back</a>
+    </div>
+
+    <!-- Upload form card -->
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+
+        <!-- This form sends file to POST /certificates/upload -->
+        <!-- enctype="multipart/form-data" is required for file uploads -->
+        <form method="POST" action="/certificates/upload" enctype="multipart/form-data">
+
+          <!-- Worker selection dropdown -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Worker <span class="text-danger">*</span></label>
+            <select name="employee_id" class="form-select" required>
+              <option value="">-- Select a worker --</option>
+              <% employees.forEach(emp =>{ %>
+                <option value="<%= emp.id %>"><%= emp.name %> (<%= emp.employee_ref %>)</option>
+              <% }) %>
+            </select>
+          </div>
+
+          <!-- Training type selection dropdown -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Training Type <span class="text-danger">*</span></label>
+            <select name="training_type_id" class="form-select" required>
+              <option value="">-- Select training type --</option>
+              <% trainingTypes.forEach(tt => { %>
+                <option value="<%= tt.id %>"><%= tt.name %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <!-- Certificate file upload - accepts images and PDFs only for reading-->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Certificate File <span class="text-danger">*</span></label>
+            <input type="file" name="certificate" class="form-control"
+              accept=".jpg,.jpeg,.png,.pdf" required>
+            <div class="form-text">Accepted formats: JPG, PNG, PDF</div>
+          </div>
+
+          <!-- Submit and cancel buttons -->
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <a href="/certificates" class="btn btn-outline-secondary">Cancel</a>
+            <button type="submit" class="btn text-white" style="background-color: #1a3c2e;">
+              Upload & Extract Text
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

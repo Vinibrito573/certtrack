@@ -1,0 +1,105 @@
+<!-- This page shows the OCR extracted text from the PDF or photo, and allows the admin to review and then confirm before saving -->
+<!-- Vinicius Brito -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | CertTrack</title>
+  <!-- Bootstrap references for CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-light" style="font-family: 'Inter', sans-serif;">
+    
+    <%- include('../layouts/navbar') %>
+  
+    <div class="container mt-4" style="max-width: 750px;">
+
+    <!-- Page header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h4 class="fw-bold mb-0" style="color: #1a3c2e;">Review Certificate</h4>
+      <a href="/certificates/upload" class="btn btn-outline-secondary btn-sm">← Back</a>
+    </div>
+
+    <!-- OCR raw text extracted from the certificate -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header fw-semibold" style="background-color: #1a3c2e; color: white;">
+        OCR Extracted Text
+      </div>
+      <div class="card-body">
+        <p class="text-muted small mb-0" style="white-space: pre-wrap;"><%= rawText %></p>
+      </div>
+    </div>
+
+    <!-- Admin user confirmation form: checking OCR data before saving -->
+    <div class="card shadow-sm">
+      <div class="card-header fw-semibold" style="background-color: #1a3c2e; color: white;">
+        Confirm Certificate Details
+      </div>
+      <div class="card-body p-4">
+
+        <form method="POST" action="/certificates/save">
+
+          <!-- Hidden fields to pass file path and OCR text to the save controller -->
+          <input type="hidden" name="file_path" value="<%= filePath %>">
+          <input type="hidden" name="ocr_raw_text" value="<%= rawText %>">
+
+          <!-- Worker selection - pre-selected from upload form -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Worker <span class="text-danger">*</span></label>
+            <select name="employee_id" class="form-select" required>
+              <% employees.forEach(emp=>{ %>
+                <option value="<%= emp.id %>" <%= emp.id == selectedEmployee ? 'selected' : '' %>>
+                  <%= emp.name %>(<%= emp.employee_ref %>)
+                </option>
+              <% }) %>
+            </select>
+          </div>
+
+          <!-- Training type - pre-selected from upload form -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Training Type<span class="text-danger">*</span></label>
+            <select name="training_type_id" class="form-select" required>
+              <% trainingTypes.forEach(tt => { %>
+                <option value="<%= tt.id %>" <%= tt.id == selectedTraining ? 'selected' : '' %>>
+                  <%= tt.name %>
+                </option>
+              <% }) %>
+            </select>
+          </div>
+
+          <!-- Issue date - admin fills in or corrects based on OCR text -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Issue Date <span class="text-danger">*</span></label>
+            <input type="date" name="issue_date" class="form-control" required>
+            <div class="form-text">Check the OCR text above and enter the correct date.</div>
+          </div>
+
+          <!-- Expiry date - admin fills in or corrects based on OCR text -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Expiry Date <span class="text-danger">*</span></label>
+            <input type="date" name="expiry_date" class="form-control" required>
+            <div class="form-text">Check the OCR text above and enter the correct date.</div>
+          </div>
+
+          <!-- Submit and cancel buttons-->
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <a href="/certificates/upload" class="btn btn-outline-secondary">Cancel</a>
+            <!-- Saving the confirmed certificate to the database -->
+            <button type="submit" class="btn text-white" style="background-color: #1a3c2e;">
+              Save Certificate
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
