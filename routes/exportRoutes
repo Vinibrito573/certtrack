@@ -1,0 +1,12 @@
+// Export Routes: Handling CSV export of training certificates status for Admin access only
+// Vinicius Brito
+
+const express = require('express');
+const router  = express.Router();
+const exportController = require('../controllers/exportController');
+const { isAuthenticated, isAdmin } = require('../middleware/authMiddleware');
+
+// Exporting all certificates to CSV
+router.get('/csv', isAuthenticated, isAdmin, exportController.exportCSV);
+
+module.exports = router;
