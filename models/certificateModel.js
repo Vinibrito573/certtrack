@@ -29,12 +29,13 @@ const getByEmployee = async (employeeId) => {
 };
 
 // Saving a new certificate to the database
-const create = async (employeeId, trainingTypeId, issueDate, expiryDate, filePath, ocrRawText, uploadedBy) =>{
+// Saving a new certificate to the database
+const create = async (employeeId, trainingTypeId, issueDate, expiryDate, filePath, ocrRawText, uploadedBy, status) => {
   const [result] = await db.query(`
     INSERT INTO certificates 
-    (employee_id, training_type_id, issue_date, expiry_date, file_path, ocr_raw_text, uploaded_by)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-  `,[employeeId, trainingTypeId, issueDate, expiryDate, filePath, ocrRawText, uploadedBy]);
+    (employee_id, training_type_id, issue_date, expiry_date, file_path, ocr_raw_text, uploaded_by, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `, [employeeId, trainingTypeId, issueDate, expiryDate, filePath, ocrRawText, uploadedBy, status]);
   return result.insertId;
 };
 

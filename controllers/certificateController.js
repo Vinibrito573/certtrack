@@ -57,13 +57,27 @@ const processUpload = async (req, res) => {
   }
 };
 
-// After the admin confirms the OCR data, this function saves the cert to the database
+// Saving the confirmed certificate to the database
 const saveCertificate = async (req, res) => {
   const { employee_id, training_type_id, issue_date, expiry_date, file_path, ocr_raw_text } = req.body;
   try {
+    // Calculating the certificate status based on expiry date
+    const today = new Date();
+    const expiry = new Date(expiry_date);
+    const daysUntilExpiry = Math.ceil((expiry - today) / (1000 * 60 * 60 * 24));
+
+    let status;
+    if (daysUntilExpiry < 0) {
+      status = 'expired';
+    } else if (daysUntilExpiry <= 30) {
+      status = 'expiring_soon';
+    } else {
+      status = 'valid';
+    }
+
     await certificateModel.create(
       employee_id, training_type_id, issue_date,
-      expiry_date, file_path, ocr_raw_text, req.user.id
+      expiry_date, file_path, ocr_raw_text, req.user.id, status
     );
     res.redirect('/certificates');
   } catch (err) {
