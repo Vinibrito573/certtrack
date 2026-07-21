@@ -25,31 +25,40 @@ const showUpload = async (req, res) => {
   }
 };
 
-// After the admin uploads a certificate:
+// Processing the uploaded certificate with OCR
 const processUpload = async (req, res) => {
   try {
-    // Getting the uploaded file path from Multer
+    // Getting the uploaded file path
     const filePath = req.file.path;
 
-    // Running OCR - Tesseract.js OCR to extract text
+    // Running OCR on the uploaded certificate
     const rawText = await parseText(filePath);
 
     // Getting employees and training types for the review form
     const [employees] = await db.query('SELECT id, name, employee_ref FROM employees ORDER BY name ASC');
     const [trainingTypes] = await db.query('SELECT * FROM training_types ORDER BY name ASC');
 
+    // Trying to automatically identify the training type from the OCR text
+    let selectedTraining = req.body.training_type_id || null;
+    if (!selectedTraining) {
+      for (const tt of trainingTypes) {
+        if (rawText.toLowerCase().includes(tt.name.toLowerCase())) {
+          selectedTraining = tt.id;
+          break;
+        }
+      }
+    }
+
     // Sending OCR results to admin for review before saving
-    res.render('certificates/review',{
+    res.render('certificates/review', {
       title: 'Review Certificate',
       rawText,
       filePath,
       employees,
       trainingTypes,
       user: req.user,
-
-    // Pre-selected values from the upload form
       selectedEmployee: req.body.employee_id,
-      selectedTraining: req.body.training_type_id,
+      selectedTraining,
     });
   } catch (err) {
     console.error('Error processing certificate:', err);

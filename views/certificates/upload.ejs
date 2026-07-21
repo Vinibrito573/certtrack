@@ -44,17 +44,6 @@
             </select>
           </div>
 
-          <!-- Training type selection dropdown -->
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Training Type <span class="text-danger">*</span></label>
-            <select name="training_type_id" class="form-select" required>
-              <option value="">-- Select training type --</option>
-              <% trainingTypes.forEach(tt => { %>
-                <option value="<%= tt.id %>"><%= tt.name %></option>
-              <% }) %>
-            </select>
-          </div>
-
           <!-- Certificate file upload - accepts images and PDFs only for reading-->
           <div class="mb-3">
             <label class="form-label fw-semibold">Certificate File <span class="text-danger">*</span></label>
@@ -66,7 +55,7 @@
           <div class="d-flex justify-content-end gap-2 mt-4">
             <a href="/certificates" class="btn btn-outline-secondary">Cancel</a>
             <button type="submit" class="btn text-white" style="background-color: #1a3c2e;">
-              Upload & Extract Text
+            Upload & Identify Training
             </button>
           </div>
         </form>
