@@ -32,9 +32,10 @@ const create = async (name, email, company) => {
 };
 
 // Updating an existing employee
-const update = async (id, name, employee_ref, email, company) => {
-  await db.query('UPDATE employees SET name = ?, employee_ref = ?, email = ?, company = ? WHERE id = ?',
-    [name, employee_ref, email, company, id]
+const update = async (id,name,email,company) => {
+  await db.query(
+    'UPDATE employees SET name = ?, email = ?, company = ? WHERE id = ?',
+    [name,email,company, id]
   );
 };
 

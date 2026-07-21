@@ -41,9 +41,10 @@ const showEdit = async (req,res) => {
 };
 
 // Updating an existing employee in the database
-const update = async (req, res) =>{
-  const { name, employee_ref, email, company } = req.body;
-  try {await employeeModel.update(req.params.id, name, employee_ref, email, company);
+const update = async (req, res) => {
+  const { name, email, company } = req.body; // employee_ref is not updated
+  try {
+    await employeeModel.update(req.params.id, name, email, company);
     res.redirect('/employees');
   } catch (err) {
     console.error('Error updating employee:', err);
