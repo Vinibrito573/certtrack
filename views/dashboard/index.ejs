@@ -12,16 +12,16 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body class="bg-light">
+<body class="bg-light" style="font-family: 'Inter', sans-serif;">
 
-<%- include('../layouts/navbar') %>
+  <%- include('../layouts/navbar') %>
 
   <div class="container mt-4">
 
     <!-- Page title -->
-    <h4 class="mb-4" style="color: #1a3c2e;">Compliance Dashboard</h4>
+    <h4 class="fw-bold mb-4" style="color: #1a3c2e;">Compliance Dashboard</h4>
 
-    <!-- KPI Cards -->
+    <!-- KPI Cards with real data from database -->
     <div class="row g-3 mb-4">
       <div class="col-md-4">
         <div class="card border-success shadow-sm">
@@ -49,6 +49,42 @@
       </div>
     </div>
 
+    <!-- Showing the most urgent certificates expiring soon -->
+    <div class="card shadow-sm">
+      <div class="card-header fw-semibold" style="background-color: #1a3c2e; color: white;">
+        Upcoming Expirations
+      </div>
+      <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+          <thead style="background-color: #f8f9fa;">
+            <tr>
+              <th class="px-4 py-3">Worker</th>
+              <th class="py-3">Worker ID</th>
+              <th class="py-3">Training Type</th>
+              <th class="py-3">Expiry Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- If no certificates yet, then show empty message -->
+            <% if (urgentCerts.length === 0) { %>
+              <tr>
+                <td colspan="4" class="text-center text-muted py-4">No certificates uploaded yet.</td>
+              </tr>
+            <% } else { %>
+              <!-- Looping through the most urgent certificates -->
+              <% urgentCerts.forEach(cert => { %>
+                <tr>
+                  <td class="px-4 py-3 fw-semibold"><%= cert.employee_name %></td>
+                  <td class="py-3"><span class="badge" style="background-color: #1a3c2e;"><%= cert.employee_ref %></span></td>
+                  <td class="py-3"><%= cert.training_name %></td>
+                  <td class="py-3"><%= new Date(cert.expiry_date).toLocaleDateString('en-IE') %></td>
+                </tr>
+              <% }) %>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
   <!-- Bootstrap JS -->

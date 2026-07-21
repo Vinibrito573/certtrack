@@ -4,14 +4,10 @@
 
 const express = require('express');
 const router  = express.Router();
+const dashboardController = require('../controllers/dashboardController');
 const { isAuthenticated, isAdmin } = require('../middleware/authMiddleware');
 
-// Show dashboard page, which only admins can access
-router.get('/', isAuthenticated, isAdmin, (req, res) => {res.render('dashboard/index', { 
-    title: 'Dashboard',
-    user: req.user,
-    stats: { valid: 0, expiring: 0, expired: 0 } // placeholder for now
-  });
-});
+// Loading the main compliance dashboard
+router.get('/', isAuthenticated, isAdmin, dashboardController.index);
 
 module.exports = router;
