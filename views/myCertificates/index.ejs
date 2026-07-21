@@ -1,0 +1,89 @@
+<!-- Employee Self-Service Portal page: Workers can view their own certificates and compliance status -->
+<!-- Vinicius Brito -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | CertTrack</title>
+  <!-- Bootstrap references for CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-light" style="font-family: 'Inter', sans-serif;">
+
+  <!-- Top navbar for employee portal -->
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a3c2e;">
+    <div class="container">
+      <a class="navbar-brand" href="/my-certificates">
+        <img src="/logo.png" alt="CertTrack" style="width: 110px;">
+      </a>
+      <div class="ms-auto d-flex align-items-center gap-3">
+        <!-- Employee only sees their own certificates -->
+        <span class="text-white">👷 <%= user.name %></span>
+        <a href="/logout" class="btn btn-outline-light btn-sm">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+
+    <!-- Page header -->
+    <h4 class="fw-bold mb-4" style="color: #1a3c2e;">My Training Certificates</h4>
+
+    <!-- Certificates table -->
+    <div class="card shadow-sm">
+      <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+          <thead style="background-color: #1a3c2e; color: white;">
+            <tr>
+              <th class="px-4 py-3">Training Type</th>
+              <th class="py-3">Issue Date</th>
+              <th class="py-3">Expiry Date</th>
+              <th class="py-3 text-center">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- If no certificates yet, show empty message -->
+            <% if (certificates.length === 0) { %>
+              <tr>
+                <td colspan="4" class="text-center text-muted py-4">No certificates found. Please contact your administrator.</td>
+              </tr>
+            <% } else { %>
+              <!-- Loop through all certificates for this employee -->
+              <% certificates.forEach(cert => { %>
+                <tr>
+                  <td class="px-4 py-3 fw-semibold"><%= cert.training_name %></td>
+                  <td class="py-3"><%= new Date(cert.issue_date).toLocaleDateString('en-IE') %></td>
+                  <td class="py-3"><%= new Date(cert.expiry_date).toLocaleDateString('en-IE') %></td>
+                  <!-- Colour coded status badge -->
+                  <td class="py-3 text-center">
+                    <% if (cert.status === 'valid') { %>
+                      <span class="badge bg-success">Valid</span>
+                    <% } else if (cert.status === 'expiring_soon') { %>
+                      <span class="badge bg-warning text-dark">Expiring Soon</span>
+                    <% } else { %>
+                      <span class="badge bg-danger">Expired</span>
+                    <% } %>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Footer note for employee -->
+    <p class="text-muted text-center mt-4" style="font-size: 12px;">
+      If you have a new certificate to register, please contact your Supervisor.
+    </p>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
