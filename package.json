@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "Training Compliance Management System for Construction Sites",
   "main": "app.js",
-  "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js"
-  },
+"scripts": {
+  "start": "node app.js",
+  "dev": "nodemon app.js",
+  "test": "jest --forceExit"
+},
   "author": "Vinicius Monteiro de Brito",
   "license": "ISC",
   "dependencies": {
@@ -24,6 +25,8 @@
     "tesseract.js": "^5.1.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.0"
+    "jest": "^30.4.2",
+    "nodemon": "^3.1.0",
+    "supertest": "^7.2.2"
   }
 }
