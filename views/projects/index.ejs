@@ -15,10 +15,9 @@
 
 <body class="bg-light" style="font-family: 'Inter', sans-serif;">
 
-<%- include('../layouts/navbar') %>
+  <%- include('../layouts/navbar') %>
 
   <div class="container mt-4">
-
     <!-- Page header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h4 class="fw-bold mb-0" style="color: #1a3c2e;">Construction Projects</h4>
@@ -52,11 +51,13 @@
                   <td class="py-3"><%= proj.location || '—' %></td>
                   <!-- Showing badge green for active, grey for closed -->
                   <td class="py-3">
-                <span class="badge" style="background-color: <%= proj.status === 'active' ? '#1a3c2e' : '#6c757d' %>;">
-                <%= proj.status %>
-                </span>
+                    <span class="badge" style="background-color: <%= proj.status === 'active' ? '#1a3c2e' : '#6c757d' %>;">
+                      <%= proj.status %>
+                    </span>
                   </td>
                   <td class="py-3 text-center">
+                    <!-- View workers button -->
+                    <a href="/projects/<%= proj.id %>" class="btn btn-sm btn-outline-secondary me-1">👷 Workers</a>
                     <!-- Edit button -->
                     <a href="/projects/edit/<%= proj.id %>" class="btn btn-sm btn-outline-secondary me-1">Edit</a>
                     <!-- Delete button -->
@@ -65,8 +66,8 @@
                     </form>
                   </td>
                 </tr>
-              <%})%>
-            <% }%>
+              <% }) %>
+            <% } %>
           </tbody>
         </table>
       </div>

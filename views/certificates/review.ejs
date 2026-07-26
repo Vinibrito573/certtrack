@@ -25,15 +25,19 @@
       <a href="/certificates/upload" class="btn btn-outline-secondary btn-sm">← Back</a>
     </div>
 
-    <!-- OCR raw text extracted from the certificate -->
-    <div class="card shadow-sm mb-4">
-      <div class="card-header fw-semibold" style="background-color: #1a3c2e; color: white;">
-        OCR Extracted Text
-      </div>
-      <div class="card-body">
-        <p class="text-muted small mb-0" style="white-space: pre-wrap;"><%= rawText %></p>
-      </div>
-    </div>
+<!-- Certificate preview and OCR extracted text -->
+<div class="card shadow-sm mb-4">
+  <div class="card-header fw-semibold d-flex justify-content-between align-items-center" style="background-color: #1a3c2e; color: white;">
+    <span>OCR Extracted Text</span>
+    <!-- Button to view the original uploaded certificate -->
+    <a href="/<%= filePath.replace('public/', '') %>" target="_blank" class="btn btn-sm btn-outline-light">
+    🔍 View Certificate
+    </a>
+  </div>
+  <div class="card-body">
+    <p class="text-muted small mb-0" style="white-space: pre-wrap;"><%= rawText %></p>
+  </div>
+</div>
 
     <!-- Admin user confirmation form: checking OCR data before saving -->
     <div class="card shadow-sm">

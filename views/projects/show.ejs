@@ -1,0 +1,124 @@
+<!-- This page shows the project details, assigned workers and their certificate compliance status -->
+<!-- Vinicius Brito -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | CertTrack</title>
+  <!-- Bootstrap references for CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-light" style="font-family: 'Inter', sans-serif;">
+  <%- include('../layouts/navbar') %>
+  <div class="container mt-4">
+
+    <!-- Page header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h4 class="fw-bold mb-1" style="color: #1a3c2e;"><%= project.name %></h4>
+        <p class="text-muted mb-0">📍 <%= project.location %> &nbsp;|&nbsp;
+          <span class="badge" style="background-color: <%= project.status === 'active' ? '#1a3c2e' : '#6c757d' %>;">
+            <%= project.status %>
+          </span>
+        </p>
+      </div>
+      <a href="/projects" class="btn btn-outline-secondary btn-sm">← Back</a>
+    </div>
+
+    <!-- Adding a worker to project -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header fw-semibold" style="background-color: #1a3c2e; color: white;">
+        Assign Worker to Project
+      </div>
+      <div class="card-body">
+        <% if (unassigned.length === 0) { %>
+          <p class="text-muted mb-0">All registered workers are already assigned to this project.</p>
+        <% } else { %>
+          <!-- Form to assign a worker -->
+          <form method="POST" action="/projects/<%= project.id %>/assign" class="d-flex gap-2">
+            <select name="employee_id" class="form-select" required>
+              <option value="">-- Select a worker to assign --</option>
+              <% unassigned.forEach(emp => { %>
+                <option value="<%= emp.id %>"><%= emp.name %> (<%= emp.employee_ref %>)</option>
+              <% }) %>
+            </select>
+            <button type="submit" class="btn text-white" style="background-color: #1a3c2e; white-space: nowrap;">
+              + Assign
+            </button>
+          </form>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Showing workers and their certificates -->
+    <div class="card shadow-sm">
+      <div class="card-header fw-semibold" style="background-color: #1a3c2e; color: white;">
+        Workers & Compliance Status
+      </div>
+      <div class="card-body p-0">
+        <% if (workers.length === 0) { %>
+          <p class="text-center text-muted py-4">No workers assigned to this project yet.</p>
+        <% } else { %>
+          <table class="table table-hover mb-0">
+            <thead style="background-color: #f8f9fa;">
+              <tr>
+                <th class="px-4 py-3">Worker</th>
+                <th class="py-3">Worker ID</th>
+                <th class="py-3">Company</th>
+                <th class="py-3">Certificates</th>
+                <th class="py-3 text-center">Remove</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% workers.forEach(worker => { %>
+                <tr>
+                  <td class="px-4 py-3 fw-semibold"><%= worker.name %></td>
+                  <td class="py-3">
+                    <span class="badge" style="background-color: #1a3c2e;"><%= worker.employee_ref %></span>
+                  </td>
+                  <td class="py-3"><%= worker.company || '—' %></td>
+                  <td class="py-3">
+                    <!-- Showing all certificates for this worker -->
+                    <% if (worker.certificates.length === 0) { %>
+                      <span class="text-muted small">No certificates uploaded</span>
+                    <% } else { %>
+                      <% worker.certificates.forEach(cert => { %>
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                          <small><%= cert.training_name %></small>
+                          <% if (cert.status === 'valid') { %>
+                            <span class="badge bg-success" style="font-size: 10px;">Valid</span>
+                          <% } else if (cert.status === 'expiring_soon') { %>
+                            <span class="badge bg-warning text-dark" style="font-size: 10px;">Expiring Soon</span>
+                          <% } else { %>
+                            <span class="badge bg-danger" style="font-size: 10px;">Expired</span>
+                          <% } %>
+                        </div>
+                      <% }) %>
+                    <% } %>
+                  </td>
+                  <td class="py-3 text-center">
+                    <!-- Remove worker from project -->
+                    <form method="POST" action="/projects/<%= project.id %>/remove"
+                      onsubmit="return confirm('Remove <%= worker.name %> from this project?')">
+                      <input type="hidden" name="employee_id" value="<%= worker.id %>">
+                      <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -26,4 +26,13 @@ router.post('/edit/:id',isAuthenticated,isAdmin, projectController.update);
 // Removing a construction project from the system
 router.post('/delete/:id',isAuthenticated, isAdmin, projectController.remove);
 
+//Showing project details with workers and their certificates
+router.get('/:id', isAuthenticated, isAdmin, projectController.show);
+
+// Adding a worker to a project
+router.post('/:id/assign', isAuthenticated, isAdmin, projectController.assignWorker);
+
+// Removing a worker from a project
+router.post('/:id/remove', isAuthenticated, isAdmin, projectController.removeWorker);
+
 module.exports = router;

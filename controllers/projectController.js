@@ -65,4 +65,69 @@ const remove = async (req, res) => {
   }
 };
 
-module.exports = { index, showCreate, create, showEdit, update, remove };
+// Showing the project details page with workers and their certificates
+const show = async (req, res) => {
+  try {
+    const project = await projectModel.getById(req.params.id);
+    const rows = await projectModel.getWorkersWithCertificates(req.params.id);
+    const unassigned = await projectModel.getUnassignedEmployees(req.params.id);
+
+    // Grouping certificates by employee
+    const workersMap = {};
+    rows.forEach(row => {
+      if (!workersMap[row.id]) {
+        workersMap[row.id] = {
+          id: row.id,
+          name: row.name,
+          employee_ref: row.employee_ref,
+          company: row.company,
+          certificates: []
+        };
+      }
+      if (row.cert_id) {
+        workersMap[row.id].certificates.push({
+          training_name: row.training_name,
+          expiry_date: row.expiry_date,
+          status: row.status
+        });
+      }
+    });
+
+    const workers = Object.values(workersMap);
+
+    res.render('projects/show', {
+      title: project.name,
+      project,
+      workers,
+      unassigned,
+      user: req.user
+    });
+  } catch (err) {
+    console.error('Error loading project:', err);
+    res.status(500).send('Ops...Something went wrong, try again.');
+  }
+};
+
+// Assigning a worker to a project
+const assignWorker = async (req, res) => {
+  try {
+    await projectModel.assignWorker(req.params.id, req.body.employee_id);
+    res.redirect(`/projects/${req.params.id}`);
+  } catch (err) {
+    console.error('Error assigning worker:', err);
+    res.status(500).send('Ops...Something went wrong, try again.');
+  }
+};
+
+// Removing a worker from a project
+const removeWorker = async (req, res) => {
+  try {
+    await projectModel.removeWorker(req.params.id, req.body.employee_id);
+    res.redirect(`/projects/${req.params.id}`);
+  } catch (err) {
+    console.error('Error removing worker:', err);
+    res.status(500).send('Ops...Something went wrong, try again.');
+  }
+};
+
+module.exports = { index, showCreate, create, showEdit, update, remove, show, assignWorker, removeWorker };
