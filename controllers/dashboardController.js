@@ -32,11 +32,19 @@ const index = async (req, res) =>{
       FROM certificates c
       JOIN employees e ON c.employee_id = e.id
       JOIN training_types tt ON c.training_type_id = tt.id
-      WHERE c.expiry_date >= CURDATE()
-      ORDER BY c.expiry_date ASC
-      LIMIT 5
-    `);
-
+    WHERE c.expiry_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)
+    ORDER BY c.expiry_date ASC
+  `);
+  // Getting all expired certificates ordered by most recently expired
+    const [expiredCerts] = await db.query(`
+      SELECT c.expiry_date, e.name AS employee_name, e.employee_ref,
+          tt.name AS training_name
+      FROM certificates c
+      JOIN employees e ON c.employee_id = e.id
+      JOIN training_types tt ON c.training_type_id = tt.id
+      WHERE c.expiry_date < CURDATE()
+      ORDER BY c.expiry_date DESC
+  `);
     res.render('dashboard/index', {
       title: 'Dashboard',
       user: req.user,
@@ -45,7 +53,8 @@ const index = async (req, res) =>{
         expiring: expiring[0].total,
         expired: expired[0].total
       },
-      urgentCerts
+      urgentCerts,
+      expiredCerts  // ← adiciona esta linha
     });
 
   } catch (err) {
