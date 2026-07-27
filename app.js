@@ -29,6 +29,7 @@ const projectRoutes = require('./routes/projectRoutes');
 const certificateRoutes = require('./routes/certificateRoutes');
 const myCertificatesRoutes = require('./routes/myCertificatesRoutes');
 const exportRoutes = require('./routes/exportRoutes');
+const trainingTypeRoutes = require('./routes/trainingTypeRoutes');
 
 app.use('/', authRoutes);
 app.use('/dashboard', dashboardRoutes);
@@ -37,6 +38,7 @@ app.use('/projects', projectRoutes);
 app.use('/certificates', certificateRoutes);
 app.use('/my-certificates', myCertificatesRoutes);
 app.use('/export', exportRoutes);
+app.use('/training-types', trainingTypeRoutes);
 
 // 404 error handling
 app.use((req, res) => {res.status(404).send('Page not found');
